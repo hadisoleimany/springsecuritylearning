@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -15,7 +14,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("password"+ new BCryptPasswordEncoder().encode("123").toString());
+        System.out.println("password" + new BCryptPasswordEncoder().encode("123").toString());
         auth.inMemoryAuthentication().withUser("hadi").password("$2a$10$qLBgjIwTSWOTrsaworVXI.VD0ywaLPmXlojIFUHyBe5iKH6prAWSW").roles("admin");
     }
 
@@ -25,11 +24,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/hi").authenticated()//should log in
                 .antMatchers("/bye").authenticated()//should log in
                 .antMatchers("/").permitAll()//shouldn't log in
-                .and().formLogin().and().httpBasic();
+                .and()
+                .formLogin().loginPage("/customLogInPage")//add custom form Login
+                .and()
+                .httpBasic()
+                .and()
+                .logout();
     }
 
     @Bean
-    PasswordEncoder getPasswordEncoder(){
+    PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
