@@ -1,6 +1,6 @@
 package com.hadi.config;
 
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -8,14 +8,25 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.sql.DataSource;
+
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final DataSource dataSource;
+    private final PasswordEncoder passwordEncoder;
+
+    public WebSecurityConfig(DataSource dataSource, PasswordEncoder passwordEncoder) {
+        this.dataSource = dataSource;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("password" + new BCryptPasswordEncoder().encode("123").toString());
-        auth.inMemoryAuthentication().withUser("hadi").password("$2a$10$qLBgjIwTSWOTrsaworVXI.VD0ywaLPmXlojIFUHyBe5iKH6prAWSW").roles("admin");
+
+        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder);
+//        auth.inMemoryAuthentication().withUser("hadi").password("$2a$10$qLBgjIwTSWOTrsaworVXI.VD0ywaLPmXlojIFUHyBe5iKH6prAWSW").roles("admin");
     }
 
     @Override
@@ -32,9 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout();
     }
 
-    @Bean
-    PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 }
 
