@@ -46,10 +46,15 @@ public class LoginController {
     public String callRegister(@ModelAttribute(value = "userDto") UserDto userDto) {
         return "singUp";
     }
+
     @PostMapping("/register")
-    public String registerUser( UserDto userDto) {
+    public String registerUser(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.saveUser(userDto);
         return "redirect:/customLogInPage";
+    }
+    @GetMapping("/accessDenied")
+    public String accessDeniedPage() {
+        return "accessDenied";
     }
 }
