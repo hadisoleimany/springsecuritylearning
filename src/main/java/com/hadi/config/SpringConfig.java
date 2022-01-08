@@ -3,6 +3,7 @@ package com.hadi.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,10 @@ public class SpringConfig {
     @Bean
     PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    JdbcTemplate jdbcTemplate(){
+        return new JdbcTemplate(createDataSource());
     }
 
     @Bean
