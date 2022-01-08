@@ -30,8 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/hi").hasAuthority("ADMIN")//should log in
-                .antMatchers("/bye").hasAuthority("USER")//should log in
+                .antMatchers("/hi","/home").hasAuthority("ADMIN")//should log in
+                .antMatchers("/bye","/home").hasAuthority("USER")//should log in
                 .antMatchers("/").permitAll()//shouldn't log in
                 .and()
                 .formLogin().loginPage("/customLogInPage")//add custom form Login
